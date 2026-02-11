@@ -18,6 +18,7 @@ PATCH_FILES = {
 FACE_SMOOTHING_BUFFER = 7
 FACE_DETECT_SCALE_FACTOR = 1.3
 FACE_DETECT_MIN_NEIGHBORS = 5
+HUMAN_VERIFICATION_INTERVAL = 1.0 # seconds between deepface checks
 
 # --- Patch Overlay Settings ---
 PATCH_Y_OFFSET_FACTOR = 0.20  # Percentage of face height to offset patch
@@ -28,12 +29,15 @@ AI_DEVICE = "cuda"  # "cuda" or "cpu"
 AI_IMAGENET_LABELS_URL = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
 # Class IDs for UNTARGETED mode
 AI_ANIMAL_IDS = [388, 281, 282, 285, 151, 153, 254, 291, 340, 386, 385]
-# Class IDs for TARGETED mode
-AI_TARGET_ID_PANDA = 388
-AI_HUMAN_IDS = [834, 835, 652] # IDs for 'person', 'groom', 'bride' etc. to compare against
+# Configuration for TARGETED mode
+AI_TARGETED_ATTACK_CONFIG = {
+    "id": 388,
+    "label": "PANDA"
+}
 
 # --- UI Settings ---
 WINDOW_NAME = 'Demo'
+UI_FULLSCREEN = True # Sets the initial state. Press 'f' to toggle.
 # Font settings
 UI_FONT = cv2.FONT_HERSHEY_SIMPLEX
 UI_MODE_TEXT_POS = (20, 50)
@@ -59,3 +63,7 @@ REC_INDICATOR_TEXT_OFFSET = (130, 60)
 REC_INDICATOR_TEXT = "REC"
 REC_INDICATOR_TEXT_SCALE = 1.0
 REC_INDICATOR_TEXT_THICKNESS = 2
+
+# --- Screenshot Settings ---
+FACE_SCREENSHOT_DIR = "face_screenshots"
+FACE_SCREENSHOT_PREFIX = "face_capture"

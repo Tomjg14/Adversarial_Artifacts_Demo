@@ -1,3 +1,1 @@
-graft data
-global-exclude *.py[co]
-global-exclude *.DS_Store
+graft src/adversarial_artifacts/data

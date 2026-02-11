@@ -70,12 +70,14 @@ The application will start in fullscreen mode, using the default camera.
 
 Use the following keys while the demo is running:
 
-| Key        | Action                                            |
-| :--------- | :------------------------------------------------ |
-| `q`        | Quit the application.                             |
-| `spacebar` | Toggle the adversarial patch on/off.              |
-| `t`        | Switch between `TARGETED` and `UNTARGETED` modes. |
-| `r`        | Start or stop recording the video output.         |
+| Key        | Action                                                                              |
+| :--------- | :---------------------------------------------------------------------------------- |
+| `q`        | Quit the application.                                                               |
+| `spacebar` | Toggle the adversarial patch on/off.                                                |
+| `t`        | Switch between `TARGETED` and `UNTARGETED` modes.                                   |
+| `r`        | Start or stop recording the video output.                                           |
+| `s`        | Save a screenshot of the face area sent for classification (only when patch is on). |
+| `f`        | Toggle fullscreen mode.                                                             |
 
 Recordings are saved in the `recordings/` directory, which is created automatically in your project folder.
 
@@ -95,7 +97,7 @@ adversarial-artifacts-demo/
 │       ├── face_utils.py         # Core logic for detection, overlay, and inference
 │       └── data/
 │           └── patches/
-│               ├── targeted_bril_PIXEL_PERFECT.png
-│               └── untargeted_bril_PIXEL_PERFECT.png
+│               ├── ... (patch images)
 └── recordings/                     # Output directory for videos (created on-the-fly)
+└── face_screenshots/               # Output directory for face captures (created on-the-fly)
 ```

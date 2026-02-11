@@ -18,7 +18,8 @@ def _setup_application(camera_index):
     h_frame = int(cam.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     cv2.namedWindow(config.WINDOW_NAME, cv2.WINDOW_NORMAL)
-    cv2.setWindowProperty(config.WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    if config.UI_FULLSCREEN:
+        cv2.setWindowProperty(config.WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
     return cam, processor, (w_frame, h_frame), None
 
@@ -43,7 +44,12 @@ def _draw_ui(frame, processor, ui_data, is_recording, frame_dims):
         # Determine color based on mode and success
         color = config.UI_COLOR_BLACK # default
         if processor.mode == "TARGETED":
-            color = config.UI_COLOR_GREEN if result.get('success') else config.UI_COLOR_RED
+            if processor.show_patch:
+                # Attack is active: Green for success, Red for failure.
+                color = config.UI_COLOR_GREEN if result.get('success') else config.UI_COLOR_RED
+            else:
+                # Attack is inactive: Use a neutral color for natural classification.
+                color = config.UI_COLOR_WHITE
         else: # UNTARGETED
             color = config.UI_COLOR_CYAN
             
@@ -58,7 +64,7 @@ def _draw_ui(frame, processor, ui_data, is_recording, frame_dims):
         cv2.putText(frame, config.REC_INDICATOR_TEXT, rec_text_pos, config.UI_FONT, 
                     config.REC_INDICATOR_TEXT_SCALE, config.UI_COLOR_RED, config.REC_INDICATOR_TEXT_THICKNESS)
 
-def _handle_key_press(key, processor, is_recording, video_writer, frame_dims):
+def _handle_key_press(key, processor, is_recording, video_writer, frame_dims, is_fullscreen):
     """Handles user key presses and returns application state."""
     should_quit = False
     if key == ord('q'):
@@ -82,7 +88,15 @@ def _handle_key_press(key, processor, is_recording, video_writer, frame_dims):
                 video_writer.release()
             video_writer = None
             print("Recording stopped.")
-    return should_quit, is_recording, video_writer
+    elif key == ord('s'): # 's' for screenshot
+        processor.trigger_face_screenshot()
+    elif key == ord('f'): # 'f' to toggle fullscreen
+        is_fullscreen = not is_fullscreen
+        new_state = cv2.WINDOW_FULLSCREEN if is_fullscreen else cv2.WINDOW_NORMAL
+        cv2.setWindowProperty(config.WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, new_state)
+        print(f"Fullscreen mode: {'ON' if is_fullscreen else 'OFF'}")
+
+    return should_quit, is_recording, video_writer, is_fullscreen
 
 def _cleanup(cam, video_writer):
     """Releases all resources."""
@@ -98,6 +112,7 @@ def start_adversarial_demo(index=0):
         return
 
     is_recording = False
+    is_fullscreen = config.UI_FULLSCREEN
 
     try:
         while True:
@@ -116,8 +131,8 @@ def start_adversarial_demo(index=0):
             cv2.imshow(config.WINDOW_NAME, display_frame)
             
             key = cv2.waitKey(1) & 0xFF
-            should_quit, is_recording, video_writer = _handle_key_press(
-                key, processor, is_recording, video_writer, frame_dims
+            should_quit, is_recording, video_writer, is_fullscreen = _handle_key_press(
+                key, processor, is_recording, video_writer, frame_dims, is_fullscreen
             )
             if should_quit:
                 break

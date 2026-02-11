@@ -12,6 +12,7 @@ setup(
         'torch',
         'torchvision',
         'requests',
+        'deepface',
     ],
     entry_points={
         'console_scripts': [
