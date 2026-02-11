@@ -16,4 +16,6 @@ env/
 
 # Output files
 recordings/
+face_screenshots/
+*.png
 *.mp4
