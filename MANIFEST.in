@@ -1,0 +1,3 @@
+graft data
+global-exclude *.py[co]
+global-exclude *.DS_Store
